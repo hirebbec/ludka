@@ -1,7 +1,7 @@
 from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase, declarative_mixin
 
-from db.models.mixins import CreatedAtMixin, UpdatedAtMixin, IDMixin
+from db.models.mixins import CreatedAtMixin, UpdatedAtMixin
 
 
 @declarative_mixin

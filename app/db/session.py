@@ -1,4 +1,5 @@
 import functools
+from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
 from sqlalchemy import URL
@@ -24,6 +25,7 @@ def get_async_session(url: str | URL | None = None) -> async_sessionmaker[AsyncS
     )
 
 
+@asynccontextmanager
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async_session = get_async_session()
     async with async_session() as session:

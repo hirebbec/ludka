@@ -1,4 +1,5 @@
 import functools
+from datetime import timezone, timedelta
 from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -7,6 +8,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     app_file: Path = Path(__file__).resolve().parent
     env_file: Path = app_file.joinpath(".env")
+
+    TIME_ZONE: timezone = timezone(offset=timedelta(hours=+3))
 
     # keyboard_main: list[list[str]] = [
     #     ["Начать смену", "Закрыть смену", "Текущая смена"],
