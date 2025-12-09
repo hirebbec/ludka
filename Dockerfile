@@ -1,6 +1,6 @@
 FROM python:3.13-slim
 
-WORKDIR /usr/library-main
+WORKDIR /usr/ludka-main
 
 ENV PYTHONUNBUFFERED=1 \
     TZ="Europe/Moscow"

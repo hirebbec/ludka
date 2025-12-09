@@ -23,14 +23,14 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = "ludka-db"
     POSTGRES_DB: str = "ludka-db"
 
-    RABBITMQ_HOST: str = "library-rabbitmq"
+    RABBITMQ_HOST: str = "ludka-rabbitmq"
     RABBITMQ_PORT: int = 5672
-    RABBITMQ_DEFAULT_USER: str = "library-rabbitmq"
-    RABBITMQ_DEFAULT_PASS: str = "library-rabbitmq"
+    RABBITMQ_DEFAULT_USER: str = "ludka-rabbitmq"
+    RABBITMQ_DEFAULT_PASS: str = "ludka-rabbitmq"
 
-    REDIS_HOST: str = "library-redis"
-    REDIS_PORT: int = 16379
-    REDIS_PASSWORD: str = "library-redis"
+    REDIS_HOST: str = "ludka-redis"
+    REDIS_PORT: int = 26379
+    REDIS_PASSWORD: str = "ludka-redis"
     REDIS_DB: int = 0
 
     @functools.cached_property
