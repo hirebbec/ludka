@@ -1,18 +1,12 @@
 import asyncio
 from bot import bot, dp
-from handlers import routers
-from middleware.db import DbSessionMiddleware
-from middleware.services import ServiceMiddleware
+from handler import routers
 
 
 async def main():
-    dp.message.middleware(DbSessionMiddleware())
-    dp.message.middleware(ServiceMiddleware())
-
     for rt in routers:
         dp.include_router(rt)
 
-    print("Start")
     await dp.start_polling(bot)
 
 

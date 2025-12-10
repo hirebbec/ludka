@@ -1,5 +1,5 @@
 from db.repository.user import UserRepository
-from schemas.user import CreateUserSchema
+from schema.user import CreateUserSchema
 from service.base import BaseService
 
 

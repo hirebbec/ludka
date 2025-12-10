@@ -20,6 +20,10 @@ class Settings(BaseSettings):
 
     TOKEN: str = "token"
 
+    TELEGRAM_MESSAGE_LEN_LIMIT: int = 4000
+
+    MOEX_BASE_URL: str = "https://iss.moex.com/iss"
+
     POSTGRES_HOST: str = "ludka-db"
     POSTGRES_PORT: int = 25432
     POSTGRES_USER: str = "ludka-db"

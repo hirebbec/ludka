@@ -2,7 +2,7 @@ from sqlalchemy import select, insert
 
 from db.models import User
 from db.repository.base import BaseDataBaseRepository
-from schemas.user import GetUserSchema, CreateUserSchema
+from schema.user import GetUserSchema, CreateUserSchema
 
 
 class UserRepository(BaseDataBaseRepository):
@@ -10,7 +10,9 @@ class UserRepository(BaseDataBaseRepository):
         query = select(User).where(User.telegram_id == telegram_id)
 
         result = await self._session.execute(query)
-        return GetUserSchema.model_validate(result.scalars().first()) if result else None
+        return (
+            GetUserSchema.model_validate(result.scalars().first()) if result else None
+        )
 
     async def create(self, user: CreateUserSchema) -> None:
         query = insert(User).values(**user.model_dump())

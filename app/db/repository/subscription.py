@@ -2,7 +2,7 @@ from sqlalchemy import insert, select
 
 from db.models import Subscription
 from db.repository.base import BaseDataBaseRepository
-from schemas.subscription import CreateSubscriptionSchema, GetSubscriptionSchema
+from schema.subscription import CreateSubscriptionSchema, GetSubscriptionSchema
 
 
 class SubscriptionRepository(BaseDataBaseRepository):
@@ -16,4 +16,8 @@ class SubscriptionRepository(BaseDataBaseRepository):
         query = select(Subscription).where(Subscription.user_id == user_id)
 
         result = await self._session.execute(query)
-        return GetSubscriptionSchema.model_validate(result.scalars().first()) if result else None
+        return (
+            GetSubscriptionSchema.model_validate(result.scalars().first())
+            if result
+            else None
+        )

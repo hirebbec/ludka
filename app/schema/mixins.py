@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from schemas.base import BaseSchema
+from schema.base import BaseSchema
 
 
 class IDSchema(BaseSchema):

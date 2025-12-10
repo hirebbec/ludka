@@ -1,4 +1,4 @@
-from schemas.base import BaseSchema
+from schema.base import BaseSchema
 
 
 class CreateSubscriptionSchema(BaseSchema):
