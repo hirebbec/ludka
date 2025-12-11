@@ -1,10 +1,14 @@
 from typing import Sequence
 
-from sqlalchemy import insert, select
+from sqlalchemy import insert, select, delete
 
 from db.models import Subscription
 from db.repository.base import BaseDataBaseRepository
-from schema.subscription import CreateSubscriptionSchema, GetSubscriptionSchema
+from schema.subscription import (
+    CreateSubscriptionSchema,
+    GetSubscriptionSchema,
+    DeleteSubscriptionSchema,
+)
 
 
 class SubscriptionRepository(BaseDataBaseRepository):
@@ -22,3 +26,12 @@ class SubscriptionRepository(BaseDataBaseRepository):
             GetSubscriptionSchema.model_validate(subscription)
             for subscription in result.scalars().all()
         ]
+
+    async def delete(self, subscription: DeleteSubscriptionSchema) -> None:
+        query = delete(Subscription).where(
+            Subscription.user_id == subscription.user_id,
+            Subscription.ticker == subscription.ticker,
+        )
+
+        await self._session.execute(query)
+        await self._session.flush()

@@ -15,3 +15,7 @@ class GetSubscriptionSchema(
     UpdateSubscriptionSchema, IDSchema, CreatedAtSchema, UpdatedAtSchema
 ):
     pass
+
+
+class DeleteSubscriptionSchema(CreateSubscriptionSchema):
+    pass
