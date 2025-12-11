@@ -6,7 +6,7 @@ from service.user import UserService
 from db.repository.subscription import SubscriptionRepository
 from service.subscription import SubscriptionService
 
-from service.ticker import TickerService
+from service.stock import StockService
 
 
 class ServiceMiddleware(BaseMiddleware):
@@ -16,8 +16,8 @@ class ServiceMiddleware(BaseMiddleware):
         users_repo = UserRepository(session)
         subs_repo = SubscriptionRepository(session)
 
-        data["users_service"] = UserService(users_repo)
-        data["subscriptions_service"] = SubscriptionService(subs_repo)
-        data["tickers_service"] = TickerService()
+        data["user_service"] = UserService(users_repo)
+        data["subscription_service"] = SubscriptionService(subs_repo)
+        data[("stock_service")] = StockService()
 
         return await handler(event, data)

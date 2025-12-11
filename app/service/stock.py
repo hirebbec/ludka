@@ -1,12 +1,12 @@
 import httpx
 
 from config import settings
-from schema.ticker import GetTickerSchema, GetTickerFullSchema
+from schema.stock import GetStockSchema, GetStockFullSchema
 from service.base import BaseService
 
 
-class TickerService(BaseService):
-    async def get_all(self, limit: int = 30) -> list[GetTickerSchema]:
+class StockService(BaseService):
+    async def get_all(self, limit: int = 30) -> list[GetStockSchema]:
         async with httpx.AsyncClient(timeout=10) as client:
             resp = await client.get(
                 f"{settings().MOEX_BASE_URL}"
@@ -26,13 +26,13 @@ class TickerService(BaseService):
         md_price_idx = md_columns.index("LAST")
         md_volume_idx = md_columns.index("VALTODAY")
 
-        info_map: dict[str, GetTickerSchema] = {}
+        info_map: dict[str, GetStockSchema] = {}
 
         for row in sec_rows:
             secid = row[secid_idx]
             if secid:
-                info_map[secid] = GetTickerSchema(
-                    secid=secid,
+                info_map[secid] = GetStockSchema(
+                    ticker=secid,
                     short_name=row[shortname_idx],
                     price=None,
                     volume=None,
@@ -50,10 +50,10 @@ class TickerService(BaseService):
 
         return tickers[:limit]
 
-    async def get_by_secid(self, secid: str) -> GetTickerFullSchema | None:
+    async def get_by_ticker(self, ticker: str) -> GetStockFullSchema | None:
         url = (
             f"{settings().MOEX_BASE_URL}"
-            f"/engines/stock/markets/shares/boards/TQBR/securities/{secid}.json"
+            f"/engines/stock/markets/shares/boards/TQBR/securities/{ticker}.json"
         )
 
         async with httpx.AsyncClient(timeout=10) as client:
@@ -82,8 +82,8 @@ class TickerService(BaseService):
         change = round(price - prev_close, 2)
         change_percent = round((change / prev_close * 100), 2)
 
-        return GetTickerFullSchema(
-            secid=secid,
+        return GetStockFullSchema(
+            ticker=ticker,
             short_name=get_sec("SHORTNAME"),
             price=price,
             volume=md_data[0][md_cols.index("VALTODAY")],

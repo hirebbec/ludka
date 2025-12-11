@@ -1,16 +1,17 @@
 from typing import Sequence
 
 from config import settings
-from schema.ticker import GetTickerSchema, GetTickerFullSchema
+from schema.subscription import GetSubscriptionSchema
+from schema.stock import GetStockSchema, GetStockFullSchema
 
 
-def format_ticker_list(tickers: Sequence[GetTickerSchema]) -> str:
+def format_stocks(tickers: Sequence[GetStockSchema]) -> str:
     lines = []
 
     for ticker in tickers:
         lines.append(
             (
-                f"📈 <b>{ticker.secid}</b> — {ticker.short_name or '—'}\n"
+                f"📈 <b>{ticker.ticker}</b> — {ticker.short_name or '—'}\n"
                 f"💵 Цена: {ticker.price or '-'}\n"
                 f"📊 Объём: {ticker.volume:,}\n"
             )
@@ -21,9 +22,9 @@ def format_ticker_list(tickers: Sequence[GetTickerSchema]) -> str:
     return text[: settings().TELEGRAM_MESSAGE_LEN_LIMIT]
 
 
-def format_ticker(ticker: GetTickerFullSchema) -> str:
+def format_ticker(ticker: GetStockFullSchema) -> str:
     return (
-        f"📈 <b>{ticker.secid}</b> — {ticker.short_name or '—'}\n"
+        f"📈 <b>{ticker.ticker}</b> — {ticker.short_name or '—'}\n"
         f"💵 Цена: {ticker.price if ticker.price is not None else '-'}\n"
         f"📊 Объём: {ticker.volume:,} \n"
         f"📤 Открытие: {ticker.open if ticker.open is not None else '-'}\n"
@@ -33,3 +34,13 @@ def format_ticker(ticker: GetTickerFullSchema) -> str:
         f"🔄 Изменение: {ticker.change if ticker.change is not None else '-'}\n"
         f"📐 Изм. %: {ticker.change_percent if ticker.change_percent is not None else '-'}%\n"
     )
+
+def format_subscriptions(subscriptions: Sequence[GetSubscriptionSchema]) -> str:
+    lines = []
+
+    for subscription in subscriptions:
+        lines.append(f"<b>{subscription.ticker}\n</b>")
+
+    text = "\n".join(lines)
+
+    return text[: settings().TELEGRAM_MESSAGE_LEN_LIMIT] if text else "Подписок нету."

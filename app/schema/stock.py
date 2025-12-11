@@ -1,14 +1,14 @@
 from schema.base import BaseSchema
 
 
-class GetTickerSchema(BaseSchema):
-    secid: str
+class GetStockSchema(BaseSchema):
+    ticker: str
     short_name: str | None
     price: float | None
     volume: float | None
 
 
-class GetTickerFullSchema(GetTickerSchema):
+class GetStockFullSchema(GetStockSchema):
     open: float | None
     low: float | None
     high: float | None

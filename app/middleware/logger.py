@@ -19,23 +19,22 @@ class LoggingMiddleware(BaseMiddleware):
         event: Any,
         data: Dict[str, Any],
     ):
-        if event.from_user:
-            if isinstance(event, Message):
-                logger.info(f"[MESSAGE] From={event.from_user.id} Text={event.text!r}")
+        if isinstance(event, Message) and event.from_user:
+            logger.info(f"[MESSAGE] From={event.from_user.id} Text={event.text!r}")
 
-            elif isinstance(event, CallbackQuery):
-                logger.info(f"[CALLBACK] From={event.from_user.id} Data={event.data!r}")
+        elif isinstance(event, CallbackQuery) and event.from_user:
+            logger.info(f"[CALLBACK] From={event.from_user.id} Data={event.data!r}")
 
-            elif isinstance(event, Update):
-                logger.info(f"[UPDATE] Raw update type={event.event_type}")
+        elif isinstance(event, Update):
+            logger.info(f"[UPDATE] Raw update type={event.event_type}")
 
-            result = await handler(event, data)
+        result = await handler(event, data)
 
-            handler_name = self.get_handler_name(handler)
+        handler_name = self.get_handler_name(handler)
 
-            logger.info(f"[HANDLER DONE] {handler_name} for {type(event).__name__}")
+        logger.info(f"[HANDLER DONE] {handler_name} for {type(event).__name__}")
 
-            return result
+        return result
 
     def get_handler_name(self, handler):
         if hasattr(handler, "__name__"):
