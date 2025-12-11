@@ -19,17 +19,23 @@ class ServiceMiddleware(BaseMiddleware):
         event: TelegramObject,
         data: Dict[str, Any],
     ) -> Any:
+        if isinstance(event, Message) and not event.from_user:
+            return None
+
         session = data.get("session")
 
-        users_repo = UserRepository(session)
-        subs_repo = SubscriptionRepository(session)
+        user_repository = UserRepository(session=session)  # type: ignore
+        subscription_repository = SubscriptionRepository(session=session)  # type: ignore
 
-        user_service = UserService(users_repo)
-        subscription_service = SubscriptionService(subs_repo)
+        user_service = UserService(user_repository=user_repository)
+        subscription_service = SubscriptionService(
+            subscription_repository=subscription_repository
+        )
         stock_service = StockService()
 
         if isinstance(event, Message) and event.from_user:
-            await user_service.get_or_create(event.from_user.id)
+            if not await user_service.get_or_create(telegram_id=event.from_user.id):
+                return None
 
         data["user_service"] = user_service
         data["subscription_service"] = subscription_service

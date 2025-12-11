@@ -5,7 +5,7 @@ from aiogram.types import Message
 from service.stock import StockService
 from service.subscription import SubscriptionService
 from state.stock import TickerState
-from utils.format import format_stocks, format_ticker
+from utils.format import format_stocks, format_stock
 
 router = Router()
 
@@ -17,7 +17,7 @@ async def get_all(
 ):
     stocks = await stock_service.get_all()
 
-    text = format_stocks(tickers=stocks)
+    text = format_stocks(stocks=stocks)
 
     await message.answer(text, parse_mode="HTML")
 
@@ -42,7 +42,7 @@ async def get_by_ticker(
         if not stock:
             await message.answer("❌ Тикер не найден. Попробуйте снова.")
         else:
-            text = format_ticker(ticker=stock)
+            text = format_stock(ticker=stock)
             await message.answer(text, parse_mode="HTML")
 
         await state.clear()
@@ -55,13 +55,16 @@ async def get_by_subscriptions(
     stock_service: StockService,
 ):
     subscriptions = await subscription_service.get_by_user_id(
-        user_id=message.from_user.id
+        user_id=message.from_user.id  # type: ignore
     )
 
     stocks = [
-        await stock_service.get_by_ticker(ticker=subscription.ticker)
+        stock
         for subscription in subscriptions
+        if (stock := await stock_service.get_by_ticker(ticker=subscription.ticker))
+        is not None
     ]
-    text = format_stocks(tickers=stocks)
+
+    text = format_stocks(stocks=stocks)
 
     await message.answer(text, parse_mode="HTML")

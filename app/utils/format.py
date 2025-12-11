@@ -5,15 +5,15 @@ from schema.subscription import GetSubscriptionSchema
 from schema.stock import GetStockSchema, GetStockFullSchema
 
 
-def format_stocks(tickers: Sequence[GetStockSchema]) -> str:
+def format_stocks(stocks: Sequence[GetStockSchema]) -> str:
     lines = []
 
-    for ticker in tickers:
+    for stock in stocks:
         lines.append(
             (
-                f"📈 <b>{ticker.ticker}</b> — {ticker.short_name or '—'}\n"
-                f"💵 Цена: {ticker.price or '-'}\n"
-                f"📊 Объём: {ticker.volume:,}\n"
+                f"📈 <b>{stock.ticker}</b> — {stock.short_name or '—'}\n"
+                f"💵 Цена: {stock.price or '-'}\n"
+                f"📊 Объём: {stock.volume:,}\n"
             )
         )
 
@@ -22,7 +22,7 @@ def format_stocks(tickers: Sequence[GetStockSchema]) -> str:
     return text[: settings().TELEGRAM_MESSAGE_LEN_LIMIT]
 
 
-def format_ticker(ticker: GetStockFullSchema) -> str:
+def format_stock(ticker: GetStockFullSchema) -> str:
     return (
         f"📈 <b>{ticker.ticker}</b> — {ticker.short_name or '—'}\n"
         f"💵 Цена: {ticker.price if ticker.price is not None else '-'}\n"

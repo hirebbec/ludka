@@ -15,7 +15,7 @@ async def get_subscriptions_by_user_id(
     subscription_service: SubscriptionService,
 ):
     subscriptions = await subscription_service.get_by_user_id(
-        user_id=message.from_user.id
+        user_id=message.from_user.id  # type: ignore
     )
 
     text = format_subscriptions(subscriptions=subscriptions)
@@ -44,7 +44,8 @@ async def create_subscription(
         ticker = message.text.upper()
 
         await subscription_service.create_subscription(
-            ticker=ticker, user_id=message.from_user.id
+            ticker=ticker,
+            user_id=message.from_user.id,  # type: ignore
         )
         await message.answer("Подписка добавлена!", parse_mode="HTML")
 
@@ -58,6 +59,7 @@ async def delete_subscription(
         ticker = message.text.upper()
 
         await subscription_service.delete_subscription(
-            ticker=ticker, user_id=message.from_user.id
+            ticker=ticker,
+            user_id=message.from_user.id,  # type: ignore
         )
         await message.answer("Подписка удаленна!", parse_mode="HTML")

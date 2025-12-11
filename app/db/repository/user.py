@@ -14,7 +14,7 @@ class UserRepository(BaseDataBaseRepository):
             GetUserSchema.model_validate(result.scalars().first()) if result else None
         )
 
-    async def create(self, user: CreateUserSchema) -> GetUserSchema:
+    async def create(self, user: CreateUserSchema) -> GetUserSchema | None:
         query = insert(User).values(**user.model_dump()).returning(User)
 
         result = await self._session.execute(query)
