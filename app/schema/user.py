@@ -1,5 +1,5 @@
 from schema.base import BaseSchema
-from schema.mixins import CreatedAtSchema, UpdatedAtSchema, IDSchema
+from schema.mixins import CreatedAtSchema, UpdatedAtSchema
 
 
 class CreateUserSchema(BaseSchema):

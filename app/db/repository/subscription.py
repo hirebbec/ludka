@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from sqlalchemy import insert, select
 
 from db.models import Subscription
@@ -12,12 +14,11 @@ class SubscriptionRepository(BaseDataBaseRepository):
         await self._session.execute(query)
         await self._session.flush()
 
-    async def get_by_user_id(self, user_id: int) -> GetSubscriptionSchema | None:
+    async def get_by_user_id(self, user_id: int) -> Sequence[GetSubscriptionSchema]:
         query = select(Subscription).where(Subscription.user_id == user_id)
 
         result = await self._session.execute(query)
-        return (
-            GetSubscriptionSchema.model_validate(result.scalars().first())
-            if result
-            else None
-        )
+        return [
+            GetSubscriptionSchema.model_validate(subscription)
+            for subscription in result.scalars().all()
+        ]

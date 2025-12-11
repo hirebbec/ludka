@@ -35,6 +35,7 @@ def format_ticker(ticker: GetStockFullSchema) -> str:
         f"📐 Изм. %: {ticker.change_percent if ticker.change_percent is not None else '-'}%\n"
     )
 
+
 def format_subscriptions(subscriptions: Sequence[GetSubscriptionSchema]) -> str:
     lines = []
 

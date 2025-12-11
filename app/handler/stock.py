@@ -1,4 +1,3 @@
-from turtledemo.nim import Stick
 
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext

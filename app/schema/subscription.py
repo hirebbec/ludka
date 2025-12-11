@@ -1,4 +1,5 @@
 from schema.base import BaseSchema
+from schema.mixins import IDSchema, CreatedAtSchema, UpdatedAtSchema
 
 
 class CreateSubscriptionSchema(BaseSchema):
@@ -10,5 +11,7 @@ class UpdateSubscriptionSchema(CreateSubscriptionSchema):
     pass
 
 
-class GetSubscriptionSchema(UpdateSubscriptionSchema):
+class GetSubscriptionSchema(
+    UpdateSubscriptionSchema, IDSchema, CreatedAtSchema, UpdatedAtSchema
+):
     pass
