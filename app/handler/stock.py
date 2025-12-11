@@ -3,7 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
 from service.stock import StockService
-from service.user import UserService
+from service.subscription import SubscriptionService
 from state.stock import TickerState
 from utils.format import format_stocks, format_ticker
 
@@ -11,16 +11,10 @@ router = Router()
 
 
 @router.message(F.text == "Все тикеры")
-async def get_all_stocks(
+async def get_all(
     message: Message,
-    user_service: UserService,
     stock_service: StockService,
 ):
-    if not message.from_user:
-        return
-
-    await user_service.get_or_create(message.from_user.id)
-
     stocks = await stock_service.get_all()
 
     text = format_stocks(tickers=stocks)
@@ -29,19 +23,16 @@ async def get_all_stocks(
 
 
 @router.message(F.text == "Цена по тикеру")
-async def ask_ticker(message: Message, user_service: UserService, state: FSMContext):
-    if not message.from_user:
-        return
-
-    await user_service.get_or_create(message.from_user.id)
-
+async def ask_ticker(message: Message, state: FSMContext):
     await message.answer("Введите тикер, например: <b>SBER</b>", parse_mode="HTML")
     await state.set_state(TickerState.waiting_for_ticker)
 
 
 @router.message(TickerState.waiting_for_ticker)
-async def get_stock_info(
-    message: Message, state: FSMContext, stock_service: StockService
+async def get_by_ticker(
+    message: Message,
+    state: FSMContext,
+    stock_service: StockService,
 ):
     if message.text:
         ticker = message.text.upper()
@@ -55,3 +46,22 @@ async def get_stock_info(
             await message.answer(text, parse_mode="HTML")
 
         await state.clear()
+
+
+@router.message(F.text == "Цена по моим подпискам")
+async def get_by_subscriptions(
+    message: Message,
+    subscription_service: SubscriptionService,
+    stock_service: StockService,
+):
+    subscriptions = await subscription_service.get_by_user_id(
+        user_id=message.from_user.id
+    )
+
+    stocks = [
+        await stock_service.get_by_ticker(ticker=subscription.ticker)
+        for subscription in subscriptions
+    ]
+    text = format_stocks(tickers=stocks)
+
+    await message.answer(text, parse_mode="HTML")

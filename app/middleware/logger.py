@@ -1,13 +1,12 @@
 import logging
 
+from aiogram import BaseMiddleware
+from aiogram.types import Message, CallbackQuery, Update
+from typing import Any, Callable, Dict, Awaitable
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
-
-from aiogram import BaseMiddleware
-from aiogram.types import Message, CallbackQuery, Update
-from typing import Any, Callable, Dict, Awaitable
 
 logger = logging.getLogger(__name__)
 
